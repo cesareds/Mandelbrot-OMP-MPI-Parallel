@@ -25,10 +25,16 @@ mpic++ mandelbrot-with-omp.cpp -o bin/mandelbrot-with-omp.out -fopenmp
 echo "\n======Executando Mandelbrots======\n"
 
 echo "Executando o apenas MPI\n"
-time mpirun --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot.in >> times.txt
+echo "mpi" >> times.txt
+for i in `seq 1 10`; do
+	time mpirun --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot.in >> times.txt;
+done
 
 echo "Executando o MPI com OpenMP\n"
-time mpirun -bind-to none --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot.in >> times.txt
+echo "omp" >> times.txt
+for i in `seq 1 10`; do
+	time mpirun -bind-to none --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot.in >> times.txt;
+done
 
 
 
