@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 file_in = "times_dynamic.txt"
-file_out_all = "all.png"
+file_out_all = "graphics/all.png"
 
 # Leitura e separação dos dados
 with open(file_in, "r") as f:
@@ -58,7 +58,7 @@ plt.xlabel("Execução")
 plt.ylabel("Tempo (s)")
 plt.legend()
 plt.grid(True)
-plt.savefig("line_plot.png")
+plt.savefig("graphics/line_plot.png")
 plt.close()
 
 # Boxplot
@@ -67,7 +67,7 @@ plt.boxplot([mpi_times, omp_times], labels=["MPI Only", "MPI + OpenMP"])
 plt.title("Boxplot dos Tempos")
 plt.ylabel("Tempo (s)")
 plt.grid(True)
-plt.savefig("boxplot.png")
+plt.savefig("graphics/boxplot.png")
 plt.close()
 
 # ========= NOVOS GRÁFICOS ADICIONAIS =========
@@ -133,5 +133,5 @@ axs[1, 1].grid(True)
 
 plt.tight_layout()
 plt.savefig(file_out_all)
-print(f"Gráficos salvos: 'line_plot.png', 'boxplot.png', e '{file_out_all}'")
+print(f"Gráficos salvos: 'graphics/line_plot.png', 'graphics/boxplot.png', e '{file_out_all}'")
 plt.close()
