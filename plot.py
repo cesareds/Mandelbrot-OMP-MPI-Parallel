@@ -36,7 +36,20 @@ plt.ylabel("Tempo (s)")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
+plt.close()
 
 # Salva o gráfico
 plt.savefig(file_out)
 print(f"Gráfico salvo como '{file_out}'")
+
+# boxplots:
+plt.figure(figsize=(10, 6))
+plt.boxplot(mpi_times, label="MPI Only", marker='o')
+plt.boxplot(omp_times, label="MPI + OpenMP", marker='s')
+plt.title("Tempo de Execução (segundos)")
+plt.xlabel("Execução")
+plt.ylabel("Tempo (s)")
+plt.legend()
+plt.grid(True)
+# plt.tight_layout()
+plt.close()
