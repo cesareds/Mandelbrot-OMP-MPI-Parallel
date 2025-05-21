@@ -27,30 +27,24 @@ TIMEFORMAT="%R"
 echo -e "Executando o apenas MPI\n"
 rm times.txt
 echo "mpi" >> times.txt
-for i in $(seq 1 8); do
-	echo "Executando o mandelbrot${i}.in com MPI apenas"
-    exec_time=$( { time mpirun --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot${i}.in > /dev/null; } 2>&1 )
-    echo "$exec_time" >> times.txt
-    echo "Executando o mandelbrot${i}.in com MPI apenas"
-    exec_time=$( { time mpirun --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot${i}.in > /dev/null; } 2>&1 )
-    echo "$exec_time" >> times.txt
-    echo "Executando o mandelbrot${i}.in com MPI apenas"
-    exec_time=$( { time mpirun --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot${i}.in > /dev/null; } 2>&1 )
-    echo "$exec_time" >> times.txt
+for i in `seq 1 16`; do
+    for j in `seq 1 3`; do
+        echo "Executando o mandelbrot${i}.in com MPI apenas"
+        exec_time=$( { time mpirun --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < inputs/mandelbrot${i}.in > /dev/null; } 2>&1 )
+        echo "$exec_time" >> times.txt
+        echo $exec_time
+    done
 done
 
 echo -e "Executando o MPI com OpenMP\n"
 echo "omp" >> times.txt
-for i in $(seq 1 8); do
-	echo "Executando o mandelbrot${i}.in com MPI e OpenMP"
-    exec_time=$( { time mpirun -bind-to none --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot${i}.in > /dev/null; } 2>&1 )
-    echo "$exec_time" >> times.txt
-    echo "Executando o mandelbrot${i}.in com MPI e OpenMP"
-    exec_time=$( { time mpirun -bind-to none --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot${i}.in > /dev/null; } 2>&1 )
-    echo "$exec_time" >> times.txt
-    echo "Executando o mandelbrot${i}.in com MPI e OpenMP"
-    exec_time=$( { time mpirun -bind-to none --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot${i}.in > /dev/null; } 2>&1 )
-    echo "$exec_time" >> times.txt
+for i in `seq 1 16`; do
+    for j in `seq 1 3`; do
+        echo "Executando o mandelbrot${i}.in com MPI e OpenMP"
+        exec_time=$( { time mpirun -bind-to none --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < inputs/mandelbrot${i}.in > /dev/null; } 2>&1 )
+        echo $exec_time
+        echo "$exec_time" >> times.txt
+    done
 done
 
 
