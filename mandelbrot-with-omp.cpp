@@ -36,11 +36,11 @@ int main(int argc, char **argv)
 	int fatia = max_row / size;
 
 	int r, c, n;
-	int start_row = rank * fatia;
-	int end_row = start_row + fatia;
+	int inicio = rank * fatia;
+	int fim = inicio + fatia;
 
 #pragma omp parallel for private(r, c, n) shared(mat, max_n, max_row, max_column) schedule(dynamic)
-	for (r = start_row; r < end_row; ++r)
+	for (r = inicio; r < fim; ++r)
 	{
 
 		for (c = 0; c < max_column; ++c)
