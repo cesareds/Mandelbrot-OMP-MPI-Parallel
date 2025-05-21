@@ -6,37 +6,7 @@ if yes
 
 echo "\n=====Iniciou configuração inicial=====\n"
 
-(0) Executar apenas 1 vez
-
 for i in `seq 1 4`; do ssh ens$i "exit"; done
-
-(1) Compilação:
-
-mpic++ codigo.c -o saida 
-
-(2) Criar um arquivo informando os servidores (exemplo: hosts.txt):
-
-ens1
-
-ens2
-
-ens3
-
-ens4
-
-ens5
-
-(3) Execução (sempre com origem na ens5):
-
-mpirun --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 mandelbrot < mandelbrot.in
-
-(4) Execução (sempre com origem na ens5) usando MPI e OpenMP:
-
-mpirun -bind-to none --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 mandelbrot < mandelbrot.in
-
-
-
-
 
 
 
@@ -44,9 +14,30 @@ mpirun -bind-to none --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221
 echo "\n======Iniciou a compilação======\n"
 
 echo "Compilando o apenas MPI\n"
-
-mpic++ -O3 mandelbrot-mpi-only.cpp 
+mpic++ mandelbrot-mpi-only.cpp -o bin/mandelbrot-mpi-only.out
 
 echo "Compilando o MPI com OpenMP\n"
+mpic++ mandelbrot-with-omp.cpp -o bin/mandelbrot-with-omp.out -fopenmp
 
-mpic++ -O3 mandelbrot-with-omp.cpp -fopenmp
+
+
+
+echo "\n======Executando Mandelbrots======\n"
+
+echo "Executando o apenas MPI\n"
+time mpirun --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot.in >> times.txt
+
+echo "Executando o MPI com OpenMP\n"
+time mpirun -bind-to none --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot.in >> times.txt
+
+
+
+
+echo "\n======Gerando gráficos======\n"
+
+echo "Python >> graphic.png"
+python3 plot.py
+open graphic.png
+
+
+
