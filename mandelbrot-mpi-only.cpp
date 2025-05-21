@@ -36,8 +36,10 @@ int main(int argc, char **argv)
 	int fatia = max_row / size;
 
 	int r, c, n;
+	int start_row = rank * fatia;
+	int end_row = start_row + fatia;
 
-	for (r = rank * fatia; r < rank * fatia + fatia; ++r)
+	for (r = start_row; r < end_row; ++r)
 	{
 		for (c = 0; c < max_column; ++c)
 		{

@@ -36,10 +36,13 @@ int main(int argc, char **argv)
 	int fatia = max_row / size;
 
 	int r, c, n;
+	int start_row = rank * fatia;
+	int end_row = start_row + fatia;
 
 #pragma omp parallel for private(r, c, n) shared(mat, max_n, max_row, max_column) schedule(dynamic)
-	for (r = rank * fatia; r < rank * fatia + fatia; ++r)
+	for (r = start_row; r < end_row; ++r)
 	{
+
 		for (c = 0; c < max_column; ++c)
 		{
 			complex<float> z;
