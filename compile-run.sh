@@ -1,39 +1,41 @@
 #! /bin/bash
 
 echo "Precisa fazer a configuração inicial?(y/n)"
+read resposta
+if [ "$resposta" = "y" ]; then
+    echo -e "\n=====Iniciou configuração inicial=====\n"
+    for i in `seq 1 4`; do
+        ssh ens$i "exit"
+    done
+fi
 
-if yes
 
-echo "\n=====Iniciou configuração inicial=====\n"
+echo -e "\n======Iniciou a compilação======\n"
 
-for i in `seq 1 4`; do ssh ens$i "exit"; done
-
-
-
-
-echo "\n======Iniciou a compilação======\n"
-
-echo "Compilando o apenas MPI\n"
+echo -e "Compilando o apenas MPI\n"
 mpic++ mandelbrot-mpi-only.cpp -o bin/mandelbrot-mpi-only.out
 
-echo "Compilando o MPI com OpenMP\n"
+echo -e "Compilando o MPI com OpenMP\n"
 mpic++ mandelbrot-with-omp.cpp -o bin/mandelbrot-with-omp.out -fopenmp
 
 
 
 
-echo "\n======Executando Mandelbrots======\n"
+echo -e "\n======Executando Mandelbrots======\n"
 
-echo "Executando o apenas MPI\n"
+TIMEFORMAT="%R"
+echo -e "Executando o apenas MPI\n"
 echo "mpi" >> times.txt
-for i in `seq 1 10`; do
-	time mpirun --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot.in >> times.txt;
+for i in $(seq 1 10); do
+    exec_time=$( { time mpirun --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-mpi-only.out < mandelbrot.in > /dev/null; } 2>&1 )
+    echo "$exec_time" >> times.txt
 done
 
-echo "Executando o MPI com OpenMP\n"
+echo -e "Executando o MPI com OpenMP\n"
 echo "omp" >> times.txt
-for i in `seq 1 10`; do
-	time mpirun -bind-to none --machinefile hosts.txt  --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot.in >> times.txt;
+for i in $(seq 1 10); do
+    exec_time=$( { time mpirun -bind-to none --machinefile hosts.txt --mca btl_tcp_if_include 10.20.221.0/24 bin/mandelbrot-with-omp.out < mandelbrot.in > /dev/null; } 2>&1 )
+    echo "$exec_time" >> times.txt
 done
 
 
@@ -43,7 +45,4 @@ echo "\n======Gerando gráficos======\n"
 
 echo "Python >> graphic.png"
 python3 plot.py
-open graphic.png
-
-
 
